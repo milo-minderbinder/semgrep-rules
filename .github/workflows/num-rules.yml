@@ -1,0 +1,18 @@
+name: num-rules
+
+on:
+  push:
+    branches:
+      - develop
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  run_benchmarks:
+    runs-on: ubuntu-latest
+    name: Update Dashboard
+    steps:
+    - uses: actions/checkout@v2
+    - name: record stats
+      run: |
+        NUM=$(grep -R -e'- id:' * | wc -l | bc) && curl --fail -L -X POST https://dashboard.semgrep.dev/api/metric/semgrep-rules.num -d $NUM
